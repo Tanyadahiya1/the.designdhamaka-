@@ -1,0 +1,256 @@
+{% extends "base.html" %}
+{% block title %}the.designdhamaka – Premium Digital Marketing Agency Delhi{% endblock %}
+{% block content %}
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <div class="container">
+    <div class="hero-content">
+      <div class="hero-badge" data-aos="fade-down">
+        <div class="hero-badge-dot"></div>
+        <span>Delhi's Fastest Growing Design Agency</span>
+      </div>
+      <h1 class="hero-title" data-aos="fade-up" data-aos-delay="100">
+        Your Brand.
+        <span class="line-orange">Our Dhamaka.</span>
+        <span class="line-outline">Built in 7 Days.</span>
+      </h1>
+      <p class="hero-sub" data-aos="fade-up" data-aos-delay="200">
+        Premium websites, powerful branding & social media that converts — starting at ₹25,000. Delivered in maximum 1 week.
+      </p>
+      <div class="hero-actions" data-aos="fade-up" data-aos-delay="300">
+        <a href="/contact" class="btn-primary"><i class="fas fa-calendar-check"></i> Book Free Consultation</a>
+        <a href="/portfolio" class="btn-outline"><i class="fas fa-eye"></i> View Portfolio</a>
+      </div>
+      <div class="hero-stats" data-aos="fade-up" data-aos-delay="400">
+        <div>
+          <div class="hero-stat-num"><span class="counter" data-target="50">0</span>+</div>
+          <div class="hero-stat-label">Projects Delivered</div>
+        </div>
+        <div>
+          <div class="hero-stat-num">₹25K</div>
+          <div class="hero-stat-label">Starting Price</div>
+        </div>
+        <div>
+          <div class="hero-stat-num">7</div>
+          <div class="hero-stat-label">Days Delivery</div>
+        </div>
+        <div>
+          <div class="hero-stat-num"><span class="counter" data-target="100">0</span>%</div>
+          <div class="hero-stat-label">Client Satisfaction</div>
+        </div>
+      </div>
+    </div>
+    <div class="hero-right">
+      <div class="hero-card-stack">
+        <div class="floating-card card1">
+          <div class="card-icon">🚀</div>
+          <div class="card-label">Latest Project</div>
+          <div class="card-value">APEX MODS</div>
+          <div class="card-sub">Website Delivered in 5 Days</div>
+        </div>
+        <div class="floating-card card2">
+          <div class="card-icon">📈</div>
+          <div class="card-label">Instagram Growth</div>
+          <div class="card-value">+340%</div>
+          <div class="card-sub">Revanta Regency</div>
+        </div>
+        <div class="floating-card card3">
+          <div class="card-icon">💰</div>
+          <div class="card-label">Websites from</div>
+          <div class="card-value">₹25,000</div>
+          <div class="card-sub">Full package included</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-section">
+  <div class="marquee-track">
+    {% for item in ['Website Design','Brand Identity','Social Media','SEO Optimization','Ads Management','Logo Design','Content Creation','Lead Generation','Website Design','Brand Identity','Social Media','SEO Optimization','Ads Management','Logo Design','Content Creation','Lead Generation'] %}
+    <div class="marquee-item"><span>✦</span> {{ item }}</div>
+    {% endfor %}
+  </div>
+</div>
+
+<!-- TRUSTED BY -->
+<section class="section-sm" style="padding: 60px 0;">
+  <div class="container">
+    <p class="text-center text-muted" style="font-size:13px;text-transform:uppercase;letter-spacing:3px;margin-bottom:36px;" data-aos="fade-up">Trusted by growing brands</p>
+    <div style="display:flex;flex-wrap:wrap;gap:16px;justify-content:center;align-items:center;" data-aos="fade-up" data-aos-delay="100">
+      {% for brand in ['Vahan360','Revanta Regency','APEX MODS','Spice Route Cafe','Brew Cafe','Sizzling.hu'] %}
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 28px;font-family:var(--font-display);font-size:14px;font-weight:700;color:var(--text2);white-space:nowrap;">{{ brand }}</div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section class="section" id="services">
+  <div class="container">
+    <div class="section-header" data-aos="fade-up">
+      <div class="section-tag">What We Do</div>
+      <h2 class="section-title">Services That <span>Drive Results</span></h2>
+      <p class="section-sub">From branding to full websites — we deliver premium quality at startup-friendly prices.</p>
+    </div>
+    <div class="card-grid grid-3">
+      {% set services = [
+        ('fa-palette','Branding & Identity','Logo, color palette, brand guidelines — everything to make your brand unforgettable.','branding'),
+        ('fa-share-nodes','Social Media Mgmt','Reels, posts, stories — we grow your audience and keep them engaged.','social'),
+        ('fa-code','Website Development','Stunning, fast, responsive websites. Built and delivered in under 7 days.','web'),
+        ('fa-magnifying-glass-chart','SEO Optimization','Rank higher, get found faster. Technical + content SEO that works.','seo'),
+        ('fa-rectangle-ad','Ads Management','Meta & Google Ads campaigns that convert clicks to customers.','ads'),
+        ('fa-bullhorn','Lead Generation','Funnels, landing pages & campaigns engineered to fill your pipeline.','leads'),
+      ] %}
+      {% for icon, title, desc, id in services %}
+      <div class="card" data-aos="fade-up" data-aos-delay="{{ loop.index0 * 80 }}">
+        <div class="service-icon"><i class="fas {{ icon }}"></i></div>
+        <h3>{{ title }}</h3>
+        <p>{{ desc }}</p>
+        <a href="/services#{{ id }}" class="card-arrow">Learn more <i class="fas fa-arrow-right"></i></a>
+      </div>
+      {% endfor %}
+    </div>
+    <div class="text-center mt-8" data-aos="fade-up">
+      <a href="/services" class="btn-outline">Explore All Services <i class="fas fa-arrow-right"></i></a>
+    </div>
+  </div>
+</section>
+
+<!-- WHY US -->
+<section class="section" style="background: var(--bg2);">
+  <div class="container">
+    <div class="section-header centered" data-aos="fade-up">
+      <div class="section-tag">Why Choose Us</div>
+      <h2 class="section-title">The <span>Dhamaka</span> Difference</h2>
+    </div>
+    <div class="card-grid grid-4">
+      {% for icon, title, desc in [
+        ('⚡','7-Day Delivery','Large websites delivered within 1 week. No delays, no excuses.'),
+        ('💰','Starts at ₹25K','Premium quality at honest prices. No hidden charges.'),
+        ('🎨','100% Custom','No templates. Every project is crafted from scratch.'),
+        ('🔁','Unlimited Revisions','We iterate until you are completely satisfied.'),
+      ] %}
+      <div class="card text-center" data-aos="zoom-in" data-aos-delay="{{ loop.index0 * 100 }}">
+        <div style="font-size:40px;margin-bottom:16px;">{{ icon }}</div>
+        <h3>{{ title }}</h3>
+        <p>{{ desc }}</p>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- PORTFOLIO PREVIEW -->
+<section class="section">
+  <div class="container">
+    <div class="section-header" data-aos="fade-up">
+      <div class="section-tag">Our Work</div>
+      <h2 class="section-title">Recent <span>Projects</span></h2>
+      <p class="section-sub">A glimpse of brands we've transformed.</p>
+    </div>
+    <div class="portfolio-grid">
+      {% for item in featured %}
+      <div class="portfolio-item" data-aos="fade-up" data-aos-delay="{{ loop.index0 * 100 }}">
+        {% if item['image_filename'] %}
+        <img src="{{ url_for('static', filename='images/' + item['image_filename']) }}" alt="{{ item['title'] }}" loading="lazy">
+        {% else %}
+        <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:48px;background:var(--bg3);">🖼️</div>
+        {% endif %}
+        <div class="portfolio-overlay">
+          <div class="portfolio-tag">{{ item['category'] | title }}</div>
+          <div class="portfolio-name">{{ item['title'] }} – {{ item['description'] }}</div>
+        </div>
+      </div>
+      {% else %}
+      <div class="card" style="grid-column:1/-1;text-align:center;padding:60px;">
+        <p style="color:var(--text2);">Projects will appear here once added from the admin panel.</p>
+      </div>
+      {% endfor %}
+    </div>
+    <div class="text-center mt-8" data-aos="fade-up">
+      <a href="/portfolio" class="btn-primary">View Full Portfolio <i class="fas fa-arrow-right"></i></a>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS PREVIEW -->
+<section class="section" style="background: var(--bg2);">
+  <div class="container">
+    <div class="section-header centered" data-aos="fade-up">
+      <div class="section-tag">Client Love</div>
+      <h2 class="section-title">What Our <span>Clients Say</span></h2>
+    </div>
+    <div class="card-grid grid-3">
+      {% for name, role, text, stars in [
+        ('Revanta Regency','Hotel Owner','Design Dhamaka handled everything — from product photos to ad creatives and made our small brand look premium. Great team to work with!',5),
+        ('Spice Route Cafe','Restaurant Owner','They understood our restaurant\'s vibe instantly and designed posts that looked delicious and professional. Our Instagram now looks consistent!',5),
+        ('Brew Cafe','Cafe Owner','Super professional and easy to communicate with. They built our social media presence from scratch and gave us a clean, modern brand identity.',5),
+      ] %}
+      <div class="testimonial-card" data-aos="fade-up" data-aos-delay="{{ loop.index0 * 100 }}">
+        <div class="stars">{{ '★' * stars }}</div>
+        <p class="testimonial-text">"{{ text }}"</p>
+        <div class="testimonial-author">
+          <div class="author-avatar">{{ name[0] }}</div>
+          <div>
+            <div class="author-name">{{ name }}</div>
+            <div class="author-role">{{ role }}</div>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="section">
+  <div class="container">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:start;" class="faq-grid">
+      <div data-aos="fade-right">
+        <div class="section-tag">FAQ</div>
+        <h2 class="section-title">Common <span>Questions</span></h2>
+        <p class="section-sub">Everything you need to know before starting your project.</p>
+        <a href="/contact" class="btn-primary mt-8" style="margin-top:32px;display:inline-flex;">Ask a Question <i class="fas fa-arrow-right"></i></a>
+      </div>
+      <div data-aos="fade-left">
+        {% for q, a in [
+          ('How long does a website take?','We deliver most websites in 5–7 business days. For large or complex projects, we keep it to a maximum of 1 week.'),
+          ('What is included in the ₹25,000 package?','A complete, fully responsive website with up to 5 pages, hosting setup, SEO basics, and 1 month of support.'),
+          ('Do you work with businesses outside Delhi?','Absolutely! We work with clients across India and globally. All communication is online.'),
+          ('Can I see the work before paying?','We start with a 30–50% advance. You review drafts throughout, and balance is due on final delivery.'),
+          ('Do you offer ongoing social media management?','Yes! We offer monthly packages starting at ₹8,000/month for content creation, posting, and engagement.'),
+        ] %}
+        <div class="accordion-item">
+          <button class="accordion-header">{{ q }} <i class="fas fa-chevron-down accordion-icon"></i></button>
+          <div class="accordion-body"><p>{{ a }}</p></div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</section>
+<style>
+@media (max-width: 768px) { .faq-grid { grid-template-columns: 1fr !important; gap: 40px !important; } }
+</style>
+
+<!-- CTA -->
+<section class="section" style="background: var(--bg2);">
+  <div class="container">
+    <div class="cta-section" data-aos="zoom-in">
+      <div class="section-tag" style="margin-bottom:20px;">Ready to start?</div>
+      <h2 class="section-title" style="margin-bottom:16px;">Let's Build Something <span>Dhamaka</span></h2>
+      <p style="color:var(--text2);font-size:17px;margin-bottom:40px;max-width:500px;margin-left:auto;margin-right:auto;">Book a free 30-minute consultation call. No commitment, no fluff — just real talk about your brand.</p>
+      <div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap;">
+        <a href="/contact" class="btn-primary"><i class="fas fa-calendar-check"></i> Book Free Call</a>
+        <a href="https://wa.me/917982445861" class="btn-outline" target="_blank"><i class="fab fa-whatsapp"></i> WhatsApp Us</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% endblock %}

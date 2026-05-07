@@ -1,0 +1,411 @@
+{% extends "base.html" %}
+{% block title %}Admin Panel – the.designdhamaka{% endblock %}
+
+{% block extra_css %}
+<style>
+.admin-wrap{padding:120px 0 80px;}
+.admin-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:36px;flex-wrap:wrap;gap:16px;}
+.stat-cards{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:40px;}
+@media(max-width:768px){.stat-cards{grid-template-columns:1fr 1fr;}}
+.stat-card{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-sm);padding:18px 20px;text-align:center;}
+[data-theme="dark"] .stat-card{background:var(--bg2);}
+.stat-card-num{font-family:var(--font-display);font-size:32px;font-weight:800;color:var(--orange);}
+.stat-card-label{font-size:12px;color:var(--text3);margin-top:3px;text-transform:uppercase;letter-spacing:1px;}
+.tabs{display:flex;gap:10px;margin-bottom:32px;}
+.port-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:20px;}
+.add-card{border:2px dashed var(--border-orange);border-radius:var(--radius);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:36px;cursor:pointer;transition:var(--transition);background:var(--golden-glow);min-height:240px;text-decoration:none;}
+.add-card:hover{background:rgba(232,114,12,.12);border-color:var(--orange);}
+.add-card-icon{width:52px;height:52px;border-radius:50%;background:var(--orange);color:#fff;display:flex;align-items:center;justify-content:center;font-size:22px;}
+.add-card-text{font-family:var(--font-display);font-size:15px;font-weight:700;color:var(--brown);}
+[data-theme="dark"] .add-card-text{color:var(--text);}
+.add-card-sub{font-size:12px;color:var(--text3);text-align:center;}
+.section-divider{height:1px;background:var(--border);margin:40px 0;}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="admin-wrap">
+<div class="container">
+
+  <!-- Header -->
+  <div class="admin-header">
+    <div>
+      <div class="section-tag">Admin Panel</div>
+      <h1 class="section-title" style="font-size:36px;margin-bottom:0;">Dashboard <span>Control</span></h1>
+    </div>
+    <a href="/" class="btn-outline" style="font-size:13px;padding:10px 18px;"><i class="fas fa-eye"></i> View Live Site</a>
+  </div>
+
+  <!-- Stats -->
+  <div class="stat-cards">
+    <div class="stat-card">
+      <div class="stat-card-num">{{ stats.total_leads }}</div>
+      <div class="stat-card-label">Total Leads</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-card-num" style="color:#e05c00;">{{ stats.new_leads }}</div>
+      <div class="stat-card-label">New Leads</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-card-num">{{ stats.total_projects }}</div>
+      <div class="stat-card-label">Total Projects</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-card-num" style="color:#16a34a;">{{ stats.active_projects }}</div>
+      <div class="stat-card-label">Active Projects</div>
+    </div>
+  </div>
+
+  <!-- Tabs -->
+  <div class="tabs">
+    <button class="admin-tab-btn active" onclick="switchTab('portfolio',this)" id="tab-portfolio">
+      <i class="fas fa-images"></i> Portfolio Manager
+    </button>
+    <button class="admin-tab-btn" onclick="switchTab('leads',this)" id="tab-leads">
+      <i class="fas fa-inbox"></i> Leads ({{ stats.total_leads }})
+      {% if stats.new_leads > 0 %}<span style="background:var(--orange);color:#fff;font-size:10px;padding:2px 7px;border-radius:20px;margin-left:4px;">{{ stats.new_leads }} new</span>{% endif %}
+    </button>
+  </div>
+
+  <!-- ══ PORTFOLIO TAB ══ -->
+  <div id="tab-content-portfolio">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:12px;">
+      <div>
+        <h2 style="font-family:var(--font-display);font-size:22px;font-weight:800;color:var(--brown);">Portfolio Projects</h2>
+        <p style="font-size:13px;color:var(--text2);margin-top:3px;">Add, edit, reorder or hide projects. Changes show live on the portfolio page.</p>
+      </div>
+    </div>
+
+    <div class="port-grid" id="portGrid">
+
+      <!-- Add New Card -->
+      <div class="add-card" onclick="openAddModal()">
+        <div class="add-card-icon"><i class="fas fa-plus"></i></div>
+        <div class="add-card-text">Add New Project</div>
+        <div class="add-card-sub">Upload image + fill details</div>
+      </div>
+
+      <!-- Existing items -->
+      {% for item in portfolio_items %}
+      <div class="port-admin-card {% if not item['is_active'] %}inactive{% endif %}" data-id="{{ item['id'] }}" id="pcard-{{ item['id'] }}">
+        {% if item['image_filename'] %}
+        <img src="{{ url_for('static', filename='images/' + item['image_filename']) }}" class="port-admin-img" alt="{{ item['title'] }}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+        <div class="port-admin-img placeholder" style="display:none;">🖼️</div>
+        {% else %}
+        <div class="port-admin-img placeholder">🖼️</div>
+        {% endif %}
+        <div class="port-admin-body">
+          <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:6px;">
+            <div class="port-admin-title">{{ item['title'] }}</div>
+            <span class="drag-handle" title="Drag to reorder">⠿</span>
+          </div>
+          <div class="port-admin-desc">{{ item['description'][:65] }}{% if item['description']|length > 65 %}...{% endif %}</div>
+          <div class="port-admin-meta">
+            <span class="port-tag">{{ item['category'] }}</span>
+            {% if not item['is_active'] %}<span class="port-tag" style="background:rgba(0,0,0,.06);color:var(--text3);border-color:transparent;">Hidden</span>{% endif %}
+          </div>
+          <div class="port-admin-actions">
+            <button class="btn-sm btn-edit" onclick='openEditModal({{ item | tojson }})'>
+              <i class="fas fa-pen"></i> Edit
+            </button>
+            <form method="POST" action="/admin/portfolio/toggle/{{ item['id'] }}" style="margin:0;display:inline;">
+              <button type="submit" class="btn-sm btn-toggle" title="{{ 'Hide' if item['is_active'] else 'Show' }}">
+                <i class="fas {{ 'fa-eye-slash' if item['is_active'] else 'fa-eye' }}"></i>
+              </button>
+            </form>
+            <form method="POST" action="/admin/portfolio/delete/{{ item['id'] }}" style="margin:0;display:inline;" onsubmit="return confirm('Delete this project?')">
+              <button type="submit" class="btn-sm btn-delete"><i class="fas fa-trash"></i></button>
+            </form>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+
+    <p style="font-size:12px;color:var(--text3);margin-top:16px;"><i class="fas fa-info-circle"></i> Tip: Drag the ⠿ handle to reorder projects on the live portfolio page.</p>
+  </div>
+
+  <!-- ══ LEADS TAB ══ -->
+  <div id="tab-content-leads" style="display:none;">
+    <h2 style="font-family:var(--font-display);font-size:22px;font-weight:800;color:var(--brown);margin-bottom:20px;" id="leads">Contact Form Leads</h2>
+    {% if leads %}
+    <div style="overflow-x:auto;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);">
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>#</th><th>Name</th><th>Email</th><th>Phone</th>
+            <th>Service</th><th>Budget</th><th>Message</th><th>Date</th><th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for lead in leads %}
+          <tr>
+            <td style="color:var(--text3);">{{ lead['id'] }}</td>
+            <td style="font-weight:600;color:var(--brown);">{{ lead['name'] }}</td>
+            <td><a href="mailto:{{ lead['email'] }}" style="color:var(--orange);text-decoration:none;">{{ lead['email'] }}</a></td>
+            <td>{{ lead['phone'] or '—' }}</td>
+            <td>{{ lead['service'] or '—' }}</td>
+            <td>{{ lead['budget'] or '—' }}</td>
+            <td style="max-width:180px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--text2);" title="{{ lead['message'] }}">{{ (lead['message'] or '')[:55] }}{% if (lead['message'] or '')|length > 55 %}...{% endif %}</td>
+            <td style="color:var(--text3);font-size:12px;white-space:nowrap;">{{ (lead['created_at'] or '')[:10] }}</td>
+            <td>
+              <form method="POST" action="/admin/update-status/{{ lead['id'] }}" style="margin:0;">
+                <select name="status" class="form-control" style="padding:5px 8px;font-size:11px;width:auto;" onchange="this.form.submit()">
+                  <option value="new" {% if lead['status']=='new' %}selected{% endif %}>🔴 New</option>
+                  <option value="contacted" {% if lead['status']=='contacted' %}selected{% endif %}>🟢 Contacted</option>
+                  <option value="closed" {% if lead['status']=='closed' %}selected{% endif %}>⚫ Closed</option>
+                </select>
+              </form>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% else %}
+    <div class="card" style="text-align:center;padding:60px;">
+      <div style="font-size:48px;margin-bottom:16px;">📭</div>
+      <h3>No leads yet</h3>
+      <p style="color:var(--text2);margin-top:6px;">Share your website link and enquiries will appear here.</p>
+    </div>
+    {% endif %}
+  </div>
+
+</div>
+</div>
+
+<!-- ══ ADD MODAL ══ -->
+<div class="modal-overlay" id="addModal">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModal('addModal')"><i class="fas fa-times"></i></button>
+    <div class="modal-title">Add New Project</div>
+    <form method="POST" action="/admin/portfolio/add" enctype="multipart/form-data">
+      <div class="form-group">
+        <label class="form-label">Project Image</label>
+        <div class="img-placeholder" id="addImgPlaceholder" onclick="document.getElementById('addImg').click()">
+          🖼️<br><span style="font-size:13px;margin-top:8px;display:block;">Click to upload image</span>
+        </div>
+        <img class="img-preview hidden" id="addImgPreview" alt="Preview">
+        <input type="file" name="image" id="addImg" accept="image/*" style="display:none;" onchange="previewImg(this,'addImgPreview','addImgPlaceholder')">
+        <p style="font-size:11px;color:var(--text3);margin-top:4px;">PNG, JPG, WEBP – max 5MB</p>
+      </div>
+      <div class="form-grid">
+        <div class="form-group">
+          <label class="form-label">Client / Brand Name *</label>
+          <input type="text" name="title" class="form-control" placeholder="e.g. APEX MODS" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Category *</label>
+          <select name="category" class="form-control">
+            <option value="website">Website</option>
+            <option value="branding">Branding</option>
+            <option value="social">Social Media</option>
+            <option value="design">Graphic Design</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Short Description *</label>
+        <input type="text" name="description" class="form-control" placeholder="e.g. Automotive Customization Studio — Full Website" required>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Full Detail (shown in lightbox)</label>
+        <textarea name="detail" class="form-control" style="min-height:90px;" placeholder="Describe what was built, key features, challenges solved..."></textarea>
+      </div>
+      <div class="form-grid">
+        <div class="form-group">
+          <label class="form-label">Service Type</label>
+          <input type="text" name="service" class="form-control" placeholder="e.g. Website Development">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Delivery Time</label>
+          <input type="text" name="delivery" class="form-control" placeholder="e.g. 5 Days">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Client Website / Social</label>
+        <input type="text" name="link" class="form-control" placeholder="e.g. apexmods.in">
+      </div>
+      <div style="display:flex;gap:12px;margin-top:8px;">
+        <button type="submit" class="btn-primary" style="flex:1;justify-content:center;"><i class="fas fa-plus"></i> Add Project</button>
+        <button type="button" class="btn-outline" onclick="closeModal('addModal')" style="padding:15px 24px;">Cancel</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ══ EDIT MODAL ══ -->
+<div class="modal-overlay" id="editModal">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModal('editModal')"><i class="fas fa-times"></i></button>
+    <div class="modal-title">Edit Project</div>
+    <form method="POST" id="editForm" action="" enctype="multipart/form-data">
+      <div class="form-group">
+        <label class="form-label">Project Image</label>
+        <img class="img-preview" id="editImgPreview" alt="Current image">
+        <div class="img-placeholder hidden" id="editImgPlaceholder" onclick="document.getElementById('editImg').click()">
+          🖼️<br><span style="font-size:13px;margin-top:8px;display:block;">Click to upload new image</span>
+        </div>
+        <input type="file" name="image" id="editImg" accept="image/*" style="display:none;" onchange="previewImg(this,'editImgPreview','editImgPlaceholder')">
+        <button type="button" onclick="document.getElementById('editImg').click()" class="btn-sm btn-edit" style="margin-top:6px;"><i class="fas fa-upload"></i> Change Image</button>
+      </div>
+      <div class="form-grid">
+        <div class="form-group">
+          <label class="form-label">Client / Brand Name *</label>
+          <input type="text" name="title" id="editTitle" class="form-control" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Category *</label>
+          <select name="category" id="editCategory" class="form-control">
+            <option value="website">Website</option>
+            <option value="branding">Branding</option>
+            <option value="social">Social Media</option>
+            <option value="design">Graphic Design</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Short Description *</label>
+        <input type="text" name="description" id="editDescription" class="form-control" required>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Full Detail (shown in lightbox)</label>
+        <textarea name="detail" id="editDetail" class="form-control" style="min-height:90px;"></textarea>
+      </div>
+      <div class="form-grid">
+        <div class="form-group">
+          <label class="form-label">Service Type</label>
+          <input type="text" name="service" id="editService" class="form-control">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Delivery Time</label>
+          <input type="text" name="delivery" id="editDelivery" class="form-control">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Client Website / Social</label>
+        <input type="text" name="link" id="editLink" class="form-control">
+      </div>
+      <div style="display:flex;gap:12px;margin-top:8px;">
+        <button type="submit" class="btn-primary" style="flex:1;justify-content:center;"><i class="fas fa-save"></i> Save Changes</button>
+        <button type="button" class="btn-outline" onclick="closeModal('editModal')" style="padding:15px 24px;">Cancel</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.2/Sortable.min.js"></script>
+<script>
+// Tab switching
+function switchTab(tab, btn) {
+  document.querySelectorAll('[id^="tab-content-"]').forEach(el => el.style.display='none');
+  document.querySelectorAll('.admin-tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-content-' + tab).style.display = 'block';
+  btn.classList.add('active');
+}
+
+// Check URL hash on load
+window.addEventListener('DOMContentLoaded', () => {
+  if(window.location.hash === '#leads') {
+    switchTab('leads', document.getElementById('tab-leads'));
+  }
+});
+
+// Modal open/close
+function openAddModal() {
+  document.getElementById('addModal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function openEditModal(item) {
+  const form = document.getElementById('editForm');
+  form.action = '/admin/portfolio/edit/' + item.id;
+  document.getElementById('editTitle').value = item.title || '';
+  document.getElementById('editDescription').value = item.description || '';
+  document.getElementById('editDetail').value = item.detail || '';
+  document.getElementById('editService').value = item.service || '';
+  document.getElementById('editDelivery').value = item.delivery || '';
+  document.getElementById('editLink').value = item.link || '';
+  // Category
+  const catSel = document.getElementById('editCategory');
+  for(let opt of catSel.options) { opt.selected = opt.value === item.category; }
+  // Image preview
+  const prev = document.getElementById('editImgPreview');
+  const placeholder = document.getElementById('editImgPlaceholder');
+  if(item.image_filename) {
+    prev.src = '/static/images/' + item.image_filename;
+    prev.classList.remove('hidden');
+    placeholder.classList.add('hidden');
+  } else {
+    prev.classList.add('hidden');
+    placeholder.classList.remove('hidden');
+  }
+  document.getElementById('editModal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal(id) {
+  document.getElementById(id).classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+// Close modals on backdrop click
+document.querySelectorAll('.modal-overlay').forEach(overlay => {
+  overlay.addEventListener('click', e => { if(e.target === overlay) closeModal(overlay.id); });
+});
+document.addEventListener('keydown', e => {
+  if(e.key === 'Escape') document.querySelectorAll('.modal-overlay.open').forEach(m => closeModal(m.id));
+});
+
+// Image preview
+function previewImg(input, previewId, placeholderId) {
+  const file = input.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    const prev = document.getElementById(previewId);
+    const ph = document.getElementById(placeholderId);
+    prev.src = e.target.result;
+    prev.classList.remove('hidden');
+    if(ph) ph.classList.add('hidden');
+  };
+  reader.readAsDataURL(file);
+}
+
+// Drag-to-reorder with SortableJS
+const grid = document.getElementById('portGrid');
+if(grid) {
+  new Sortable(grid, {
+    handle: '.drag-handle',
+    animation: 200,
+    ghostClass: 'sort-ghost',
+    filter: '.add-card',
+    onEnd: function() {
+      const order = Array.from(grid.querySelectorAll('[data-id]')).map(el => parseInt(el.dataset.id));
+      fetch('/admin/portfolio/reorder', {
+        method: 'POST',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({order})
+      }).then(r => r.json()).then(d => {
+        if(d.success) showToast('Order saved!');
+      });
+    }
+  });
+}
+
+// Toast notification
+function showToast(msg) {
+  const t = document.createElement('div');
+  t.className = 'flash flash-success';
+  t.innerHTML = '<i class="fas fa-check-circle"></i>' + msg;
+  t.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);z-index:9999;min-width:200px;text-align:center;justify-content:center;';
+  document.body.appendChild(t);
+  setTimeout(() => t.style.opacity='0', 2000);
+  setTimeout(() => t.remove(), 2500);
+}
+</script>
+<style>.sort-ghost{opacity:.4;border:2px dashed var(--orange)!important;}</style>
+{% endblock %}

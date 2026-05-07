@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% block title %}Pricing – the.designdhamaka{% endblock %}
+{% block content %}
+
+<section class="page-hero">
+  <div class="page-hero-bg"></div>
+  <div class="container">
+    <div class="section-tag" data-aos="fade-down">Transparent Pricing</div>
+    <h1 class="section-title" data-aos="fade-up">Simple, <span>Honest</span> Prices</h1>
+    <p class="section-sub" data-aos="fade-up" data-aos-delay="100">No hidden charges. No surprises. Just results.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <!-- Website Packages -->
+    <div class="section-header centered" data-aos="fade-up">
+      <div class="section-tag">Website Packages</div>
+      <h2 class="section-title">Pick Your <span>Website Plan</span></h2>
+    </div>
+    <div class="card-grid grid-3" style="margin-bottom:80px;">
+      {% for plan, price, desc, features, featured in [
+        ('Starter','₹25,000','Perfect for small businesses & freelancers','Up to 3 Pages,Mobile Responsive,Contact Form,Basic SEO,1 Round of Revisions,2 Weeks Support',False),
+        ('Growth','₹40,000','For growing brands needing more','Up to 7 Pages,Mobile Responsive,Blog/CMS,Advanced SEO,WhatsApp Integration,3 Rounds of Revisions,1 Month Support,Google Maps,Speed Optimization',True),
+        ('Premium','₹70,000','Full-stack custom web presence','Up to 15 Pages,E-Commerce Ready,Custom Animations,Full SEO Setup,Admin Dashboard,Unlimited Revisions,3 Months Support,Analytics Setup,Speed & Security',False),
+      ] %}
+      <div class="pricing-card {% if featured %}featured{% endif %}" data-aos="fade-up" data-aos-delay="{{ loop.index0 * 100 }}">
+        <h3 style="font-family:var(--font-display);font-size:22px;margin-bottom:8px;">{{ plan }}</h3>
+        <p style="color:var(--text2);font-size:13px;margin-bottom:20px;">{{ desc }}</p>
+        <div style="margin-bottom:8px;">
+          <div class="price-amount">{{ price }}</div>
+          <div class="price-period">one-time payment</div>
+        </div>
+        <div class="divider"></div>
+        <ul class="pricing-features">
+          {% for f in features.split(',') %}
+          <li><i class="fas fa-check"></i> {{ f }}</li>
+          {% endfor %}
+        </ul>
+        <a href="/contact?service=website-{{ plan.lower() }}" class="btn-primary w-full" style="justify-content:center;">Get Started <i class="fas fa-arrow-right"></i></a>
+      </div>
+      {% endfor %}
+    </div>
+
+    <!-- Social Media Packages -->
+    <div class="section-header centered" data-aos="fade-up">
+      <div class="section-tag">Monthly Plans</div>
+      <h2 class="section-title">Social Media <span>Management</span></h2>
+    </div>
+    <div class="card-grid grid-3">
+      {% for plan, price, features, featured in [
+        ('Basic','₹8,000/mo','12 Posts/month,Story Designs,Hashtag Strategy,Monthly Report',False),
+        ('Pro','₹15,000/mo','25 Posts/month,Reels (4/month),Story Designs,Hashtag Strategy,Engagement Mgmt,Weekly Report',True),
+        ('Full Growth','₹25,000/mo','Unlimited Posts,Reels & Stories,Ads Management,SEO Content,Monthly Strategy Call,Priority Support',False),
+      ] %}
+      <div class="pricing-card {% if featured %}featured{% endif %}" data-aos="fade-up" data-aos-delay="{{ loop.index0 * 100 }}">
+        <h3 style="font-family:var(--font-display);font-size:22px;margin-bottom:8px;">{{ plan }}</h3>
+        <div class="price-amount" style="font-size:36px;">{{ price.split('/')[0] }}</div>
+        <div class="price-period">per month</div>
+        <div class="divider"></div>
+        <ul class="pricing-features">
+          {% for f in features.split(',') %}
+          <li><i class="fas fa-check"></i> {{ f }}</li>
+          {% endfor %}
+        </ul>
+        <a href="/contact?service=social-{{ plan.lower().replace(' ','-') }}" class="btn-primary w-full" style="justify-content:center;">Get Started <i class="fas fa-arrow-right"></i></a>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<section class="section" style="background: var(--bg2);">
+  <div class="container">
+    <div class="cta-section" data-aos="zoom-in">
+      <h2 class="section-title" style="margin-bottom:16px;">Need a <span>custom quote?</span></h2>
+      <p style="color:var(--text2);font-size:17px;margin-bottom:32px;">Have unique requirements? Tell us — we'll build a package just for you.</p>
+      <a href="/contact" class="btn-primary"><i class="fas fa-message"></i> Get Custom Quote</a>
+    </div>
+  </div>
+</section>
+{% endblock %}

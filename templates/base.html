@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="the.designdhamaka – Premium Digital Marketing Agency in Delhi. Websites, Branding, Social Media & More from ₹25,000. Delivered in 7 Days.">
+<title>{% block title %}the.designdhamaka – Your Brand. Our Dhamaka.{% endblock %}</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Inter:wght@300;400;500;600&family=Bebas+Neue&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+{% block extra_css %}{% endblock %}
+</head>
+<body>
+
+<!-- Loader -->
+<div id="loader">
+  <div class="loader-inner">
+    <img src="{{ url_for('static', filename='images/logo.png') }}" class="loader-logo-img" alt="Design Dhamaka">
+    <div class="loader-bar"><div class="loader-fill"></div></div>
+  </div>
+</div>
+
+<!-- Cursor -->
+<div class="cursor" id="cursor"></div>
+<div class="cursor-follower" id="cursor-follower"></div>
+
+<!-- Navbar -->
+<nav class="navbar" id="navbar">
+  <div class="nav-container">
+    <a href="/" class="nav-logo">
+      <img src="{{ url_for('static', filename='images/logo.png') }}" class="nav-logo-img" alt="Design Dhamaka Logo">
+      <div class="nav-logo-text">
+        <span class="dot-the">the.</span><span class="dot-design">design</span><span class="dot-dhamaka">dhamaka</span>
+      </div>
+    </a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="/" class="nav-link {% if request.endpoint=='home' %}active{% endif %}">Home</a></li>
+      <li><a href="/services" class="nav-link {% if request.endpoint=='services' %}active{% endif %}">Services</a></li>
+      <li><a href="/portfolio" class="nav-link {% if request.endpoint=='portfolio' %}active{% endif %}">Portfolio</a></li>
+      <li><a href="/about" class="nav-link {% if request.endpoint=='about' %}active{% endif %}">About</a></li>
+      <li><a href="/testimonials" class="nav-link {% if request.endpoint=='testimonials' %}active{% endif %}">Reviews</a></li>
+      <li><a href="/pricing" class="nav-link {% if request.endpoint=='pricing' %}active{% endif %}">Pricing</a></li>
+      <li><a href="/blog" class="nav-link {% if request.endpoint=='blog' %}active{% endif %}">Blog</a></li>
+      <li><a href="/contact" class="nav-cta">Book Consultation</a></li>
+    </ul>
+    <div class="nav-actions">
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme"><i class="fas fa-moon" id="themeIcon"></i></button>
+      <button class="hamburger" id="hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+</nav>
+
+<!-- Flash Messages -->
+{% with messages = get_flashed_messages(with_categories=true) %}
+{% if messages %}
+<div class="flash-container">
+  {% for category, message in messages %}
+  <div class="flash flash-{{ category }}">
+    <i class="fas {% if category=='success' %}fa-check-circle{% else %}fa-exclamation-circle{% endif %}"></i>
+    {{ message }}
+    <button onclick="this.parentElement.remove()"><i class="fas fa-times"></i></button>
+  </div>
+  {% endfor %}
+</div>
+{% endif %}
+{% endwith %}
+
+<main>{% block content %}{% endblock %}</main>
+
+<!-- Footer -->
+<footer class="footer">
+  <div class="footer-glow"></div>
+  <div class="footer-container">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;">
+          <img src="{{ url_for('static', filename='images/logo.png') }}" style="width:40px;height:40px;object-fit:contain;border-radius:50%;" alt="Logo">
+          <div class="footer-logo">the.<span>design</span>dhamaka</div>
+        </div>
+        <p>Your Brand. Our Dhamaka. Premium digital experiences built fast, built right — from ₹25,000.</p>
+        <div class="footer-socials">
+          <a href="https://instagram.com/the.designdhamaka" target="_blank" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+          <a href="https://wa.me/917982445861" target="_blank" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+          <a href="mailto:hello@thedesigndhamaka.com" aria-label="Email"><i class="fas fa-envelope"></i></a>
+        </div>
+      </div>
+      <div class="footer-links-col">
+        <h4>Services</h4>
+        <ul>
+          <li><a href="/services#branding">Branding</a></li>
+          <li><a href="/services#social">Social Media</a></li>
+          <li><a href="/services#web">Website Dev</a></li>
+          <li><a href="/services#seo">SEO</a></li>
+          <li><a href="/services#ads">Ads Management</a></li>
+        </ul>
+      </div>
+      <div class="footer-links-col">
+        <h4>Company</h4>
+        <ul>
+          <li><a href="/about">About Us</a></li>
+          <li><a href="/portfolio">Portfolio</a></li>
+          <li><a href="/testimonials">Testimonials</a></li>
+          <li><a href="/pricing">Pricing</a></li>
+          <li><a href="/blog">Blog</a></li>
+        </ul>
+      </div>
+      <div class="footer-contact-col">
+        <h4>Get In Touch</h4>
+        <p><i class="fas fa-phone"></i> +91 79824 45861</p>
+        <p><i class="fas fa-map-marker-alt"></i> Delhi, India</p>
+        <p><i class="fab fa-instagram"></i> @the.designdhamaka</p>
+        <a href="/contact" class="footer-cta">Start a Project →</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2025 the.designdhamaka. All rights reserved.</p>
+      <p>Made with 💥 in Delhi</p>
+    </div>
+  </div>
+</footer>
+
+<!-- WhatsApp -->
+<a href="https://wa.me/917982445861?text=Hi!%20I%20want%20to%20discuss%20a%20project." class="whatsapp-btn" target="_blank" aria-label="WhatsApp">
+  <i class="fab fa-whatsapp"></i>
+  <span class="wa-tooltip">Chat with us!</span>
+</a>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+{% block extra_js %}{% endblock %}
+</body>
+</html>

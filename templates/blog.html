@@ -1,0 +1,180 @@
+{% extends "base.html" %}
+{% block title %}Blog – the.designdhamaka{% endblock %}
+
+{% block extra_css %}
+<style>
+.blog-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius); overflow: hidden;
+  transition: var(--transition); cursor: pointer;
+}
+.blog-card:hover { border-color: var(--border-orange); transform: translateY(-4px); box-shadow: var(--shadow-orange); }
+.blog-img {
+  width: 100%; aspect-ratio: 16/9;
+  background: var(--bg3); border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center; font-size: 52px;
+  transition: transform 0.4s;
+}
+.blog-card:hover .blog-img { transform: scale(1.02); }
+.blog-body { padding: 24px; }
+.blog-tag { font-size: 11px; color: var(--orange); font-weight: 700; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 10px; }
+.blog-title { font-family: var(--font-display); font-size: 18px; font-weight: 700; margin-bottom: 10px; line-height: 1.3; color: var(--text); }
+.blog-excerpt { font-size: 14px; color: var(--text2); line-height: 1.7; margin-bottom: 16px; }
+.blog-meta { font-size: 12px; color: var(--text3); display: flex; gap: 16px; align-items: center; margin-bottom: 16px; }
+.blog-read-more {
+  display: inline-flex; align-items: center; gap: 8px;
+  color: var(--orange); font-size: 13px; font-weight: 600;
+  background: var(--orange-glow); border: 1px solid var(--border-orange);
+  padding: 8px 16px; border-radius: 8px; transition: var(--transition);
+  text-decoration: none;
+}
+.blog-card:hover .blog-read-more { background: var(--orange); color: #fff; gap: 12px; }
+
+/* Blog modal */
+.blog-modal-overlay {
+  display: none; position: fixed; inset: 0; z-index: 8000;
+  background: rgba(0,0,0,0.88); backdrop-filter: blur(8px);
+  align-items: center; justify-content: center; padding: 20px;
+}
+.blog-modal-overlay.open { display: flex; animation: fadeInBl .25s ease; }
+@keyframes fadeInBl { from{opacity:0} to{opacity:1} }
+.blog-modal {
+  position: relative; max-width: 720px; width: 100%;
+  background: var(--bg3); border: 1px solid var(--border);
+  border-radius: 20px; overflow: hidden; max-height: 85vh; overflow-y: auto;
+}
+.blog-modal-header { padding: 36px 36px 0; }
+.blog-modal-body { padding: 20px 36px 36px; }
+.blog-modal-body p { color: var(--text2); font-size: 15px; line-height: 1.9; margin-bottom: 16px; }
+.blog-modal-body h3 { font-family: var(--font-display); font-size: 19px; font-weight: 700; margin: 24px 0 10px; color: var(--text); }
+.blog-modal-body ul { list-style: none; display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
+.blog-modal-body ul li { display: flex; align-items: flex-start; gap: 10px; font-size: 14px; color: var(--text2); }
+.blog-modal-body ul li::before { content: '→'; color: var(--orange); flex-shrink: 0; margin-top: 1px; }
+.blog-modal-close {
+  position: absolute; top: 16px; right: 16px;
+  width: 36px; height: 36px; border-radius: 50%;
+  background: var(--surface); border: 1px solid var(--border);
+  color: var(--text2); font-size: 15px; cursor: pointer;
+  display: flex; align-items: center; justify-content: center; transition: var(--transition);
+}
+.blog-modal-close:hover { background: var(--orange); color: #fff; border-color: var(--orange); }
+.blog-modal-cta { margin-top: 28px; padding-top: 24px; border-top: 1px solid var(--border); display: flex; gap: 12px; }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<section class="page-hero">
+  <div class="page-hero-bg"></div>
+  <div class="container">
+    <div class="section-tag" data-aos="fade-down">Knowledge Base</div>
+    <h1 class="section-title" data-aos="fade-up">Design & Marketing <span>Insights</span></h1>
+    <p class="section-sub" data-aos="fade-up" data-aos-delay="100">Tips, strategies, and guides from our team. Click any article to read.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="card-grid grid-3">
+      {% set posts = [
+        ('🌐','Website Tips','5 Things Every Business Website Must Have in 2025','From mobile-first design to clear CTAs — the non-negotiables for a website that actually converts.','May 2025','5 min',
+        '<h3>Why most business websites fail</h3><p>Most business websites look fine but convert poorly. The reason is almost always the same — they were built to look good, not to drive action. Here are 5 things we check on every website we build.</p><h3>1. A clear, above-the-fold headline</h3><p>Within 3 seconds, a visitor should know exactly what you do, who you do it for, and why they should care. Vague taglines like "We deliver excellence" kill conversions.</p><h3>2. One strong CTA (not five)</h3><p>Every page should have one primary action — Book a Call, Get a Quote, Buy Now. The more options you give, the fewer conversions you get.</p><h3>3. Social proof near the top</h3><p>Reviews, client logos, project counts — trust signals should appear in the first scroll, not buried at the bottom.</p><h3>4. Mobile-first, not just responsive</h3><p>Over 70% of Indian web traffic is mobile. Your site should be designed for mobile first, then adapted for desktop — not the other way around.</p><h3>5. Fast load time (under 3 seconds)</h3><p>Google penalises slow sites. So do users. We optimise every site we build to load in under 2 seconds — compressed images, minimal scripts, good hosting.</p>'),
+        ('📱','Social Media','How to Grow Your Instagram From 0 to 10K Followers','Organic growth strategies, reel hacks, and posting schedules that actually work — no fluff.','April 2025','7 min',
+        '<h3>The truth about Instagram growth in 2025</h3><p>Most accounts stay stuck because they post inconsistently, use wrong hashtags, and create content only for themselves — not their audience. Here is the exact framework we use for our clients.</p><h3>Step 1: Nail your niche and bio</h3><p>Your bio is your elevator pitch. It should say who you help, how, and have a clear CTA link. "Digital Marketing Agency | We build brands that sell | DM for free consult" beats "living life ✨".</p><h3>Step 2: Post Reels 4x per week minimum</h3><p>Reels get 2–3x more reach than regular posts right now. Short, punchy, value-first content wins. Hook in 1.5 seconds, deliver value in 30 seconds, CTA at the end.</p><h3>Step 3: Use 5–10 niche hashtags, not 30</h3><p>Instagram stopped boosting posts with 30 generic hashtags years ago. Use 5–10 very specific ones. For a Delhi restaurant: #delhifood #delhieats #southdelhifood — not #food #restaurant.</p><h3>Step 4: Engage before and after posting</h3><p>Spend 20 minutes engaging with your target audience BEFORE you post — reply to comments, like posts, answer DMs. The algorithm rewards active accounts.</p><h3>Step 5: Story consistency</h3><p>Post Stories every day, even simple ones. Stories keep you top-of-mind and feed the algorithm. Polls and questions boost engagement fast.</p>'),
+        ('🎨','Branding','Why Your Logo is Not Your Brand (And What Is)','Most businesses get this wrong. Your brand is what people say about you when you are not in the room.','April 2025','4 min',
+        '<h3>The logo confusion</h3><p>When we ask clients "do you have a brand?" they almost always say "yes, we have a logo." A logo is a symbol. Your brand is the entire emotional experience someone has with your business.</p><h3>What actually makes a brand</h3><ul><li>Your tone of voice — are you fun, professional, bold, warm?</li><li>Your visual consistency — same fonts, colors, style across everything</li><li>Your promise — what you reliably deliver, every single time</li><li>Your story — why you exist, what you stand for</li><li>Your customer experience — from DM to delivery</li></ul><h3>Why this matters for small businesses</h3><p>A business with a consistent brand charges more, gets more referrals, and builds loyalty faster. Apple charges 3x more than competitors not because their phones are 3x better — but because their brand makes people feel something.</p><h3>How to start building your brand</h3><p>Start with your "why" — Simon Sinek style. Then define your 3 brand values. Pick a visual identity (logo + colors + fonts) that reflects those values. Apply it consistently across every touchpoint. That is branding.</p>'),
+        ('💰','Ads','How We Got 4x ROAS on Meta Ads for a Small Business','A real breakdown of our Facebook Ads strategy — targeting, creatives, and budget allocation.','March 2025','6 min',
+        '<h3>The client situation</h3><p>A Delhi restaurant was spending ₹15,000/month on Meta Ads and getting almost no trackable results. ROAS was around 1.2x. We took over and within 60 days hit 4.3x ROAS. Here is exactly what we changed.</p><h3>What they were doing wrong</h3><ul><li>Boosting posts directly (never boost posts — use Ads Manager)</li><li>Targeting Delhi city — too broad for a local restaurant</li><li>No pixel installed — they had zero conversion tracking</li><li>Creative was a generic stock photo with text overlay</li></ul><h3>What we did differently</h3><ul><li>Installed Pixel and set up purchase events properly</li><li>Geo-targeted 5km radius from the restaurant only</li><li>Created 6 creative variants — video, static, carousel</li><li>Tested 3 audiences: Lookalike 1%, interest-based, retargeting</li><li>Let winning ads run, killed losers within 72 hours</li></ul><h3>The result</h3><p>Month 1: ROAS 2.1x. Month 2: 4.3x. Cost per order dropped from ₹420 to ₹98. Same budget, 4x the revenue. The difference was strategy + tracking + creative — not spend.</p>'),
+        ('🔍','SEO','Local SEO in 2025: How to Rank #1 in Your City','Step-by-step guide to dominating local search using Google Business, on-page SEO, and reviews.','March 2025','6 min',
+        '<h3>Why local SEO is the biggest opportunity for small businesses</h3><p>When someone searches "digital marketing agency Delhi" or "best restaurant Saket" — they are ready to buy. Ranking for those terms is worth 10x more than any social media follower.</p><h3>Step 1: Claim and fully optimise your Google Business Profile</h3><p>Fill every single field. Add photos weekly. Respond to every review. Post updates. This alone will move you up in Maps results within 30 days.</p><h3>Step 2: Get consistent NAP (Name, Address, Phone)</h3><p>Your business name, address, and phone number must be exactly the same on your website, Google Business, Justdial, Sulekha, and every other directory. Inconsistency kills local rankings.</p><h3>Step 3: Get 20+ Google reviews</h3><p>Ask every happy customer personally. Reviews are the #1 local ranking factor. Create a short link to your Google review page and share it via WhatsApp.</p><h3>Step 4: Create city-specific landing pages</h3><p>If you serve Delhi, Noida, and Gurgaon — create a separate page for each. Title: "Website Design Agency in Noida | the.designdhamaka". This is how you rank for multiple cities.</p><h3>Step 5: Build local backlinks</h3><p>Get listed on local business directories, sponsor a local event, write a guest post for a local news site. Local backlinks signal local relevance to Google.</p>'),
+        ('📊','Analytics','7 Metrics That Actually Matter for Small Business Marketing','Most owners track vanity metrics. Here are the 7 numbers that predict growth and profitability.','February 2025','5 min',
+        '<h3>Stop tracking followers and likes</h3><p>Follower count and likes feel good but they do not pay bills. Here are the 7 metrics we track for every client — the ones that actually tell you if your marketing is working.</p><h3>1. Cost Per Lead (CPL)</h3><p>How much are you paying to get one enquiry? If you spend ₹10,000 on ads and get 20 leads, your CPL is ₹500. Know this number cold.</p><h3>2. Lead-to-Customer Conversion Rate</h3><p>Of all enquiries, how many become paying customers? Industry average for service businesses is 20–30%. If you are below 10%, your sales process needs work — not more leads.</p><h3>3. Customer Acquisition Cost (CAC)</h3><p>Total marketing spend divided by new customers. If you spend ₹50,000 and get 10 customers, CAC = ₹5,000. Your CAC should always be less than your customer lifetime value.</p><h3>4. Return on Ad Spend (ROAS)</h3><p>Revenue generated per rupee spent on ads. Minimum viable ROAS is 2x. Good is 4x+. Calculate this monthly for every campaign.</h3><h3>5. Email / WhatsApp open rate</h3><p>For WhatsApp broadcasts, open rates above 60% are good. Below 30% means your messaging needs work or your list is cold.</p><h3>6. Website bounce rate</h3><p>What percentage of visitors leave without clicking anything? Above 70% means your landing page is not matching search intent. Below 40% is excellent.</p><h3>7. Repeat customer rate</h3><p>For product businesses: what % of customers buy again? Repeat customers cost 5x less to sell to. If this number is low, invest in retention before acquisition.</p>'),
+      ] %}
+      {% for emoji, tag, title, excerpt, date, read_time, content in posts %}
+      <div class="blog-card"
+           data-emoji="{{ emoji }}"
+           data-tag="{{ tag }}"
+           data-title="{{ title }}"
+           data-excerpt="{{ excerpt }}"
+           data-date="{{ date }}"
+           data-read="{{ read_time }}"
+           data-content="{{ content | e }}"
+           onclick="openBlog(this)"
+           data-aos="fade-up" data-aos-delay="{{ loop.index0 % 3 * 100 }}">
+        <div class="blog-img">{{ emoji }}</div>
+        <div class="blog-body">
+          <div class="blog-tag">{{ tag }}</div>
+          <div class="blog-title">{{ title }}</div>
+          <div class="blog-excerpt">{{ excerpt }}</div>
+          <div class="blog-meta">
+            <span><i class="fas fa-calendar" style="color:var(--orange);margin-right:5px;"></i>{{ date }}</span>
+            <span><i class="fas fa-clock" style="color:var(--orange);margin-right:5px;"></i>{{ read_time }} read</span>
+          </div>
+          <div class="blog-read-more">Read Article <i class="fas fa-arrow-right"></i></div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+
+    <div style="text-align:center;margin-top:48px;" data-aos="fade-up">
+      <p style="color:var(--text2);font-size:15px;margin-bottom:20px;">Follow us for daily tips & behind-the-scenes content</p>
+      <a href="https://instagram.com/the.designdhamaka" class="btn-primary" target="_blank"><i class="fab fa-instagram"></i> Follow @the.designdhamaka</a>
+    </div>
+  </div>
+</section>
+
+<!-- Blog Modal -->
+<div class="blog-modal-overlay" id="blogModal">
+  <div class="blog-modal" id="blogModalInner">
+    <button class="blog-modal-close" id="blogClose"><i class="fas fa-times"></i></button>
+    <div class="blog-modal-header">
+      <div style="font-size:48px;margin-bottom:14px;" id="bModalEmoji"></div>
+      <div class="blog-tag" id="bModalTag"></div>
+      <h2 style="font-family:var(--font-display);font-size:clamp(22px,4vw,30px);font-weight:800;line-height:1.2;margin-bottom:12px;" id="bModalTitle"></h2>
+      <div class="blog-meta" id="bModalMeta"></div>
+    </div>
+    <div class="blog-modal-body" id="bModalBody">
+    </div>
+    <div style="padding:0 36px 36px;">
+      <div class="blog-modal-cta">
+        <a href="/contact" class="btn-primary"><i class="fas fa-rocket"></i> Start a Project</a>
+        <a href="https://wa.me/917982445861" class="btn-outline" target="_blank"><i class="fab fa-whatsapp"></i> WhatsApp Us</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function openBlog(el){
+  document.getElementById('bModalEmoji').textContent = el.dataset.emoji;
+  document.getElementById('bModalTag').textContent = el.dataset.tag;
+  document.getElementById('bModalTitle').textContent = el.dataset.title;
+  document.getElementById('bModalMeta').innerHTML =
+    '<span><i class="fas fa-calendar" style="color:var(--orange);margin-right:5px;"></i>' + el.dataset.date + '</span>' +
+    '<span style="margin-left:16px;"><i class="fas fa-clock" style="color:var(--orange);margin-right:5px;"></i>' + el.dataset.read + ' read</span>';
+  document.getElementById('bModalBody').innerHTML = el.dataset.content;
+  document.getElementById('blogModal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  document.getElementById('blogModalInner').scrollTop = 0;
+}
+
+document.getElementById('blogClose').addEventListener('click', function(){
+  document.getElementById('blogModal').classList.remove('open');
+  document.body.style.overflow = '';
+});
+
+document.getElementById('blogModal').addEventListener('click', function(e){
+  if(e.target === this){ this.classList.remove('open'); document.body.style.overflow = ''; }
+});
+
+document.addEventListener('keydown', function(e){
+  if(e.key === 'Escape' && document.getElementById('blogModal').classList.contains('open')){
+    document.getElementById('blogModal').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+});
+</script>
+{% endblock %}

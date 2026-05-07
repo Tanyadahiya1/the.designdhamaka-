@@ -1,0 +1,196 @@
+{% extends "base.html" %}
+{% block title %}Portfolio – the.designdhamaka{% endblock %}
+
+{% block extra_css %}
+<style>
+.lightbox-overlay{display:none;position:fixed;inset:0;z-index:9000;background:rgba(42,21,5,.88);backdrop-filter:blur(8px);align-items:center;justify-content:center;padding:20px;}
+.lightbox-overlay.open{display:flex;animation:fadeInLb .25s ease;}
+@keyframes fadeInLb{from{opacity:0}to{opacity:1}}
+.lightbox-inner{position:relative;max-width:1060px;width:100%;background:var(--bg);border:1px solid var(--border-orange);border-radius:20px;overflow:hidden;display:grid;grid-template-columns:1fr 320px;max-height:90vh;}
+[data-theme="dark"] .lightbox-inner{background:var(--bg2);}
+@media(max-width:768px){.lightbox-inner{grid-template-columns:1fr;}.lightbox-side{display:none;}}
+.lightbox-img-wrap{aspect-ratio:16/10;overflow:hidden;background:var(--bg3);}
+.lightbox-img-wrap img{width:100%;height:100%;object-fit:cover;display:block;}
+.lightbox-side{padding:30px 24px;display:flex;flex-direction:column;justify-content:space-between;overflow-y:auto;}
+.lightbox-close{position:absolute;top:13px;right:13px;z-index:10;width:34px;height:34px;border-radius:50%;background:rgba(42,21,5,.5);border:1px solid rgba(255,255,255,.2);color:#fff;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .2s;}
+.lightbox-close:hover{background:var(--orange);}
+.lightbox-nav{position:absolute;top:35%;transform:translateY(-50%);width:36px;height:36px;border-radius:50%;background:rgba(42,21,5,.5);border:1px solid rgba(255,255,255,.2);color:#fff;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .2s;z-index:10;}
+.lightbox-nav:hover{background:var(--orange);}
+.lightbox-nav.lp{left:11px;}.lightbox-nav.ln{left:54px;}
+.lb-tag{font-size:10px;color:var(--orange);font-weight:700;text-transform:uppercase;letter-spacing:3px;margin-bottom:9px;}
+.lb-title{font-family:var(--font-display);font-size:22px;font-weight:800;line-height:1.2;margin-bottom:8px;color:var(--brown);}
+[data-theme="dark"] .lb-title{color:var(--text);}
+.lb-desc{font-size:12px;color:var(--orange);font-weight:600;margin-bottom:12px;}
+.lb-detail{font-size:13px;color:var(--text2);line-height:1.8;margin-bottom:18px;}
+.lb-meta{display:flex;flex-direction:column;gap:9px;margin-bottom:22px;}
+.lb-meta-row{display:flex;align-items:center;gap:9px;font-size:13px;color:var(--text2);}
+.lb-meta-row i{color:var(--orange);width:13px;flex-shrink:0;}
+
+.portfolio-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;}
+@media(max-width:900px){.portfolio-grid{grid-template-columns:repeat(2,1fr);}}
+@media(max-width:560px){.portfolio-grid{grid-template-columns:1fr;}}
+.portfolio-item{cursor:pointer;border-radius:14px;overflow:hidden;position:relative;aspect-ratio:16/10;background:var(--bg3);}
+.portfolio-item img{width:100%;height:100%;object-fit:cover;transition:transform .5s ease;display:block;}
+.portfolio-item:hover img{transform:scale(1.06);}
+.portfolio-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(42,21,5,.88) 0%,transparent 55%);display:flex;flex-direction:column;justify-content:flex-end;padding:18px;opacity:0;transition:opacity .3s;}
+.portfolio-item:hover .portfolio-overlay{opacity:1;}
+.portfolio-tag{font-size:10px;color:var(--golden-light);font-weight:700;text-transform:uppercase;letter-spacing:2px;margin-bottom:4px;}
+.portfolio-name{font-family:var(--font-display);font-size:16px;font-weight:700;color:#fff;line-height:1.2;}
+.portfolio-zoom{position:absolute;top:12px;right:12px;width:32px;height:32px;border-radius:50%;background:rgba(232,114,12,.85);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;opacity:0;transition:opacity .3s;}
+.portfolio-item:hover .portfolio-zoom{opacity:1;}
+@keyframes fadeInUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="page-hero">
+  <div class="page-hero-bg"></div>
+  <div class="container">
+    <div class="section-tag" data-aos="fade-down">Our Work</div>
+    <h1 class="section-title" data-aos="fade-up">Work That <span>Speaks</span></h1>
+    <p class="section-sub" data-aos="fade-up" data-aos-delay="100">Real projects, real results. Click any project to see full details.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="portfolio-filter" data-aos="fade-up">
+      <button class="filter-btn active" data-filter="all">All Projects</button>
+      <button class="filter-btn" data-filter="website">Websites</button>
+      <button class="filter-btn" data-filter="branding">Branding</button>
+      <button class="filter-btn" data-filter="social">Social Media</button>
+      <button class="filter-btn" data-filter="design">Graphic Design</button>
+    </div>
+
+    {% if projects %}
+    <div class="portfolio-grid" id="portfolioGrid">
+      {% for item in projects %}
+      <div class="portfolio-item"
+           data-category="{{ item['category'] }}"
+           data-img="{% if item['image_filename'] %}{{ url_for('static', filename='images/' + item['image_filename']) }}{% endif %}"
+           data-name="{{ item['title'] }}"
+           data-desc="{{ item['description'] }}"
+           data-detail="{{ item['detail'] or '' }}"
+           data-service="{{ item['service'] or '' }}"
+           data-delivery="{{ item['delivery'] or '' }}"
+           data-link="{{ item['link'] or '' }}"
+           data-aos="fade-up" data-aos-delay="{{ loop.index0 % 3 * 80 }}">
+        {% if item['image_filename'] %}
+        <img src="{{ url_for('static', filename='images/' + item['image_filename']) }}" alt="{{ item['title'] }}" loading="lazy">
+        {% else %}
+        <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:48px;background:var(--bg3);">🖼️</div>
+        {% endif %}
+        <div class="portfolio-overlay">
+          <div class="portfolio-tag">{{ item['category'] | title }}</div>
+          <div class="portfolio-name">{{ item['description'] }}</div>
+        </div>
+        <div class="portfolio-zoom"><i class="fas fa-expand-alt"></i></div>
+      </div>
+      {% endfor %}
+    </div>
+    <div id="noResults" style="display:none;text-align:center;padding:60px 0;">
+      <div style="font-size:48px;margin-bottom:14px;">🔍</div>
+      <h3>No projects in this category yet</h3>
+      <p style="color:var(--text2);margin-top:8px;">We're always adding new work — <a href="/contact" style="color:var(--orange);">ask us directly</a>.</p>
+    </div>
+    {% else %}
+    <div class="card" style="text-align:center;padding:80px 40px;">
+      <div style="font-size:56px;margin-bottom:16px;">🎨</div>
+      <h3>Portfolio coming soon</h3>
+      <p style="color:var(--text2);margin-top:8px;">Projects will appear here once added from the admin panel.</p>
+    </div>
+    {% endif %}
+  </div>
+</section>
+
+<!-- Lightbox -->
+<div class="lightbox-overlay" id="lightbox">
+  <div class="lightbox-inner">
+    <button class="lightbox-close" id="lbClose"><i class="fas fa-times"></i></button>
+    <button class="lightbox-nav lp" id="lbPrev"><i class="fas fa-chevron-left"></i></button>
+    <button class="lightbox-nav ln" id="lbNext"><i class="fas fa-chevron-right"></i></button>
+    <div class="lightbox-img-wrap"><img id="lbImg" src="" alt=""></div>
+    <div class="lightbox-side">
+      <div>
+        <div class="lb-tag" id="lbTag"></div>
+        <div class="lb-title" id="lbTitle"></div>
+        <div class="lb-desc" id="lbDesc"></div>
+        <div class="lb-detail" id="lbDetail"></div>
+        <div class="lb-meta">
+          <div class="lb-meta-row"><i class="fas fa-tools"></i><span id="lbService"></span></div>
+          <div class="lb-meta-row"><i class="fas fa-clock"></i>Delivered in <strong id="lbDelivery" style="color:var(--orange);margin-left:4px;"></strong></div>
+          <div class="lb-meta-row"><i class="fas fa-link"></i><span id="lbLink"></span></div>
+        </div>
+      </div>
+      <a href="/contact" class="btn-primary" style="justify-content:center;"><i class="fas fa-rocket"></i> Start Similar Project</a>
+    </div>
+  </div>
+</div>
+
+<!-- Stats -->
+<section class="section" style="background:var(--bg2);">
+  <div class="container">
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:36px;text-align:center;" class="stats-row">
+      {% for num, label in [('50+','Projects Delivered'),('7 Days','Max Delivery'),('100%','Satisfaction'),('₹25K','Starting Price')] %}
+      <div data-aos="zoom-in" data-aos-delay="{{ loop.index0 * 100 }}">
+        <div class="stat-number">{{ num }}</div>
+        <div class="stat-label">{{ label }}</div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+<style>@media(max-width:768px){.stats-row{grid-template-columns:1fr 1fr!important;gap:20px!important}}</style>
+
+<section class="section">
+  <div class="container">
+    <div class="cta-section" data-aos="zoom-in">
+      <h2 class="section-title" style="margin-bottom:14px;">Want to be our next <span>success story?</span></h2>
+      <p style="color:var(--text2);font-size:16px;margin-bottom:36px;">Let's build something that makes people stop scrolling.</p>
+      <div style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap;">
+        <a href="/contact" class="btn-primary"><i class="fas fa-rocket"></i> Start Your Project</a>
+        <a href="/pricing" class="btn-outline"><i class="fas fa-tag"></i> See Pricing</a>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+(function(){
+  let currentIdx = 0, items = [];
+  function getItems(){ return Array.from(document.querySelectorAll('#portfolioGrid .portfolio-item')).filter(el=>el.style.display!=='none'); }
+  function fill(el){
+    document.getElementById('lbImg').src = el.dataset.img || '';
+    document.getElementById('lbTag').textContent = (el.dataset.category||'').toUpperCase();
+    document.getElementById('lbTitle').textContent = el.dataset.name || '';
+    document.getElementById('lbDesc').textContent = el.dataset.desc || '';
+    document.getElementById('lbDetail').textContent = el.dataset.detail || '';
+    document.getElementById('lbService').textContent = el.dataset.service || '';
+    document.getElementById('lbDelivery').textContent = el.dataset.delivery || '';
+    document.getElementById('lbLink').textContent = el.dataset.link || '';
+  }
+  function openLB(el){ items=getItems(); currentIdx=items.indexOf(el); fill(el); document.getElementById('lightbox').classList.add('open'); document.body.style.overflow='hidden'; }
+  function closeLB(){ document.getElementById('lightbox').classList.remove('open'); document.body.style.overflow=''; }
+  function nav(d){ items=getItems(); currentIdx=(currentIdx+d+items.length)%items.length; fill(items[currentIdx]); }
+  document.querySelectorAll('.portfolio-item').forEach(el=>el.addEventListener('click',()=>openLB(el)));
+  document.getElementById('lbClose').addEventListener('click',closeLB);
+  document.getElementById('lbPrev').addEventListener('click',e=>{e.stopPropagation();nav(-1);});
+  document.getElementById('lbNext').addEventListener('click',e=>{e.stopPropagation();nav(1);});
+  document.getElementById('lightbox').addEventListener('click',e=>{if(e.target===document.getElementById('lightbox'))closeLB();});
+  document.addEventListener('keydown',e=>{if(!document.getElementById('lightbox').classList.contains('open'))return;if(e.key==='Escape')closeLB();if(e.key==='ArrowRight')nav(1);if(e.key==='ArrowLeft')nav(-1);});
+  // Filter
+  document.querySelectorAll('.filter-btn').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      const f=btn.dataset.filter, all=document.querySelectorAll('#portfolioGrid .portfolio-item');
+      let v=0;
+      all.forEach(item=>{const m=f==='all'||item.dataset.category===f;item.style.display=m?'block':'none';if(m){v++;item.style.animation='none';item.offsetHeight;item.style.animation=`fadeInUp .4s ease ${(v-1)*60}ms both`;}});
+      document.getElementById('noResults').style.display=v===0?'block':'none';
+    });
+  });
+})();
+</script>
+{% endblock %}

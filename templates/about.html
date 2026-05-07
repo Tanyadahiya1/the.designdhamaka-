@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+{% block title %}About Us – the.designdhamaka{% endblock %}
+{% block content %}
+
+<section class="page-hero">
+  <div class="page-hero-bg"></div>
+  <div class="container">
+    <div class="section-tag" data-aos="fade-down">Our Story</div>
+    <h1 class="section-title" data-aos="fade-up">Designed in <span>Delhi.</span><br>Built for the World.</h1>
+    <p class="section-sub" data-aos="fade-up" data-aos-delay="100">We're a passionate team of designers, developers, and marketers on a mission to make every brand look premium.</p>
+  </div>
+</section>
+
+<!-- STORY -->
+<section class="section">
+  <div class="container">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;" class="about-grid">
+      <div data-aos="fade-right">
+        <div class="section-tag">Who We Are</div>
+        <h2 class="section-title">We Don't Just Design. <span>We Create Impact.</span></h2>
+        <p style="color:var(--text2);font-size:16px;line-height:1.8;margin-bottom:20px;">
+          At the.designdhamaka, we help brands, businesses, and startups turn ideas into strong visual identities that attract attention and generate leads.
+        </p>
+        <p style="color:var(--text2);font-size:16px;line-height:1.8;margin-bottom:32px;">
+          From logos and branding to graphic design and digital marketing, our goal is simple: make your brand look professional, memorable, and growth-ready — fast.
+        </p>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
+          {% for num, label in [('50+','Projects Delivered'),('7 Days','Max Turnaround'),('100%','Client Satisfaction'),('₹25K','Starting Price')] %}
+          <div class="card" style="text-align:center;padding:20px;">
+            <div class="stat-number" style="font-size:32px;">{{ num }}</div>
+            <div class="stat-label" style="font-size:13px;">{{ label }}</div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+      <div data-aos="fade-left">
+        <div class="card" style="padding:0;overflow:hidden;">
+          <img src="{{ url_for('static', filename='images/collage.png') }}" alt="Design Work" style="width:100%;display:block;border-radius:var(--radius);">
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<style>@media(max-width:768px){.about-grid{grid-template-columns:1fr!important;gap:40px!important}}</style>
+
+<!-- MISSION -->
+<section class="section" style="background: var(--bg2);">
+  <div class="container">
+    <div class="section-header centered" data-aos="fade-up">
+      <div class="section-tag">Mission & Vision</div>
+      <h2 class="section-title">What <span>Drives Us</span></h2>
+    </div>
+    <div class="card-grid grid-2">
+      <div class="card" data-aos="fade-right">
+        <div style="font-size:40px;margin-bottom:16px;">🎯</div>
+        <h3>Our Mission</h3>
+        <p>To make premium-quality design and digital marketing accessible to every growing business — delivering world-class results at honest prices, fast.</p>
+      </div>
+      <div class="card" data-aos="fade-left">
+        <div style="font-size:40px;margin-bottom:16px;">🔭</div>
+        <h3>Our Vision</h3>
+        <p>To become India's most trusted digital agency for SMEs and startups — where every client's brand becomes their unfair competitive advantage.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SKILLS -->
+<section class="section">
+  <div class="container">
+    <div class="section-header" data-aos="fade-up">
+      <div class="section-tag">Our Expertise</div>
+      <h2 class="section-title">Tools of Our <span>Trade</span></h2>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:48px;" class="skills-grid">
+      {% for skill, pct in [('Website Design & Dev',95),('Brand Identity & Logo',92),('Social Media Marketing',90),('SEO & Content',85),('Ads Management',88),('Graphic Design (Canva/PS)',96)] %}
+      <div data-aos="fade-up" data-aos-delay="{{ loop.index0 % 2 * 100 }}">
+        <div style="display:flex;justify-content:space-between;margin-bottom:8px;font-size:14px;font-weight:500;">
+          <span>{{ skill }}</span><span class="text-orange">{{ pct }}%</span>
+        </div>
+        <div class="skill-bar"><div class="skill-fill" data-width="{{ pct }}"></div></div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+<style>@media(max-width:768px){.skills-grid{grid-template-columns:1fr!important}}</style>
+
+<!-- CTA -->
+<section class="section" style="background: var(--bg2);">
+  <div class="container">
+    <div class="cta-section" data-aos="zoom-in">
+      <h2 class="section-title" style="margin-bottom:16px;">Ready to start your <span>brand journey?</span></h2>
+      <p style="color:var(--text2);font-size:17px;margin-bottom:40px;">Let's get on a quick call — free, no obligation, just ideas.</p>
+      <div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap;">
+        <a href="/contact" class="btn-primary"><i class="fas fa-calendar"></i> Book Free Consult</a>
+        <a href="/portfolio" class="btn-outline"><i class="fas fa-eye"></i> See Our Work</a>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

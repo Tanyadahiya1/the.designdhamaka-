@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% block title %}Testimonials – the.designdhamaka{% endblock %}
+{% block content %}
+
+<section class="page-hero">
+  <div class="page-hero-bg"></div>
+  <div class="container">
+    <div class="section-tag" data-aos="fade-down">Client Love</div>
+    <h1 class="section-title" data-aos="fade-up">Happy Clients, <span>Lasting Impact.</span></h1>
+    <p class="section-sub" data-aos="fade-up" data-aos-delay="100">Don't take our word for it — here's what our clients say.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="card-grid grid-3">
+      {% for name, role, text, stars in [
+        ('Revanta Regency','Hotel Owner, New Delhi','Design Dhamaka handled everything — from product photos to ad creatives and made our small brand look premium. Their ideas for reels and stories were fun and engaging, and our page started getting noticed quickly. Great team to work with!',5),
+        ('Spice Route Cafe','Restaurant Owner','We loved working with Design Dhamaka! Their creativity and attention to detail are next level. They understood our restaurant\'s vibe instantly and designed posts that looked delicious and professional. Our Instagram now looks consistent, and customers actually mention our posts when they visit!',5),
+        ('Brew Cafe','Cafe Owner','The team is super professional and easy to communicate with. They built our social media presence from scratch and gave us a clean, modern brand identity. Everything from the colors to the posts looked so well thought out. Totally recommend them for any business that wants to grow online.',5),
+        ('Sizzling.hu','Food Brand Owner','The logo and branding they created for Sizzling was beyond what I imagined. Bold, memorable, and perfectly reflects our brand personality. The turnaround was incredibly fast too.',5),
+        ('E-Commerce Client','Online Store Owner','They redesigned our website and we saw a 40% increase in conversions within the first month. The team is responsive, professional, and genuinely cares about results.',5),
+        ('Real Estate Agency','Marketing Manager','Our Google Ads ROAS went from 1.8x to 4.2x after Design Dhamaka took over our campaigns. Clear communication, smart strategy, and great execution.',5),
+      ] %}
+      <div class="testimonial-card" data-aos="fade-up" data-aos-delay="{{ loop.index0 % 3 * 100 }}">
+        <div class="stars">{{ '★' * stars }}</div>
+        <p class="testimonial-text">"{{ text }}"</p>
+        <div class="testimonial-author">
+          <div class="author-avatar">{{ name[0] }}</div>
+          <div>
+            <div class="author-name">{{ name }}</div>
+            <div class="author-role">{{ role }}</div>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- Stats -->
+<section class="section" style="background: var(--bg2);">
+  <div class="container">
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:40px;text-align:center;" class="stats-row">
+      {% for num, label in [('50+','Happy Clients'),('100%','Satisfaction Rate'),('7 Days','Avg Delivery'),('₹25K','Starting At')] %}
+      <div data-aos="zoom-in" data-aos-delay="{{ loop.index0 * 100 }}">
+        <div class="stat-number">{{ num }}</div>
+        <div class="stat-label">{{ label }}</div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+<style>@media(max-width:768px){.stats-row{grid-template-columns:1fr 1fr!important;gap:24px!important}}</style>
+
+<section class="section">
+  <div class="container">
+    <div class="cta-section" data-aos="zoom-in">
+      <h2 class="section-title" style="margin-bottom:16px;">Join Our <span>Happy Clients</span></h2>
+      <p style="color:var(--text2);font-size:17px;margin-bottom:32px;">Let's build something you'll love — and so will your customers.</p>
+      <a href="/contact" class="btn-primary"><i class="fas fa-rocket"></i> Start Your Project</a>
+    </div>
+  </div>
+</section>
+{% endblock %}

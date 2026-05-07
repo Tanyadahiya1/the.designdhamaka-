@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block title %}Services – the.designdhamaka{% endblock %}
+{% block content %}
+
+<section class="page-hero">
+  <div class="page-hero-bg"></div>
+  <div class="container">
+    <div class="section-tag" data-aos="fade-down">What We Offer</div>
+    <h1 class="section-title" data-aos="fade-up">Services That <span>Deliver ROI</span></h1>
+    <p class="section-sub" data-aos="fade-up" data-aos-delay="100">Every service is designed to make your brand look premium and convert better.</p>
+  </div>
+</section>
+
+{% set services = [
+  ('fa-palette','branding','Branding & Identity','From ₹8,000','Make your brand impossible to forget. We create logos, color palettes, typography systems, and brand guidelines that communicate your values and attract the right audience.','Logo Design,Brand Guidelines,Color Palette,Typography System,Business Cards,Social Media Kit'),
+  ('fa-share-nodes','social','Social Media Management','From ₹8,000/mo','We take over your Instagram, Facebook, and LinkedIn — creating thumb-stopping content, growing your followers, and driving genuine engagement that turns into sales.','Monthly Content Calendar,Reels & Stories,Post Design,Hashtag Strategy,Engagement Management,Monthly Reports'),
+  ('fa-code','web','Website Development','From ₹25,000','Fast, beautiful, conversion-focused websites delivered in under 7 days. We build landing pages, e-commerce sites, and full business websites that load instantly and rank well on Google.','Up to 5 Pages,Mobile Responsive,SEO Optimized,Contact Forms,Speed Optimized,1 Month Support'),
+  ('fa-magnifying-glass-chart','seo','SEO Optimization','From ₹6,000/mo','Get found by the right people at the right time. We handle everything from keyword research to technical SEO, local SEO, and content strategy that builds long-term organic traffic.','Keyword Research,On-Page SEO,Technical Audit,Google Business,Content Strategy,Monthly Tracking'),
+  ('fa-rectangle-ad','ads','Ads Management','From ₹5,000/mo','We manage your Meta and Google ad campaigns with data-driven targeting, compelling creatives, and constant optimization to maximize your return on ad spend.','Meta & Google Ads,Ad Copywriting,Audience Targeting,A/B Testing,Weekly Reports,Pixel Setup'),
+  ('fa-bullhorn','leads','Lead Generation','From ₹10,000','Full-funnel lead generation — landing pages, email sequences, WhatsApp funnels, and paid campaigns working together to fill your pipeline with qualified prospects.','Landing Page Design,Email Sequences,WhatsApp Funnels,CRM Setup,Lead Nurturing,Analytics Dashboard'),
+] %}
+
+{% for icon, id, title, price, desc, features in services %}
+<section class="section {% if loop.index is even %}section-alt{% endif %}" id="{{ id }}" style="{% if loop.index is even %}background: var(--bg2);{% endif %}">
+  <div class="container">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;" class="svc-grid">
+      <div {% if loop.index is even %}style="order:2"{% endif %} data-aos="fade-right">
+        <div class="service-icon" style="width:64px;height:64px;font-size:26px;border-radius:16px;"><i class="fas {{ icon }}"></i></div>
+        <h2 class="section-title" style="margin-top:20px;">{{ title }}</h2>
+        <div class="section-tag" style="margin-bottom:20px;">{{ price }}</div>
+        <p style="color:var(--text2);font-size:16px;line-height:1.8;margin-bottom:32px;">{{ desc }}</p>
+        <a href="/contact" class="btn-primary">Get a Quote <i class="fas fa-arrow-right"></i></a>
+      </div>
+      <div {% if loop.index is even %}style="order:1"{% endif %} data-aos="fade-left">
+        <div class="card" style="background: var(--surface);">
+          <h4 style="font-family:var(--font-display);margin-bottom:20px;">What's included</h4>
+          <ul style="list-style:none;display:flex;flex-direction:column;gap:14px;">
+            {% for f in features.split(',') %}
+            <li style="display:flex;align-items:center;gap:12px;font-size:14px;color:var(--text2);">
+              <i class="fas fa-check-circle text-orange" style="flex-shrink:0;"></i> {{ f }}
+            </li>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<style>@media(max-width:768px){.svc-grid{grid-template-columns:1fr!important;gap:32px!important} .svc-grid [style*="order:2"]{order:unset!important} .svc-grid [style*="order:1"]{order:unset!important}}</style>
+{% endfor %}
+
+{% endblock %}
